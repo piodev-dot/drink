@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>Licznik Alkoholu</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: system-ui, sans-serif;
+        background: #121212;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .drink {
+        background: #1f1f1f;
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .label {
+        font-size: 18px;
+    }
+
+    .controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    button {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: none;
+        font-size: 24px;
+        background: #ff9800;
+        color: black;
+        cursor: pointer;
+    }
+
+    button:active {
+        transform: scale(0.95);
+    }
+
+    .count {
+        font-size: 20px;
+        min-width: 25px;
+        text-align: center;
+    }
+
+    .total {
+        margin-top: 25px;
+        background: #00c853;
+        color: black;
+        padding: 20px;
+        border-radius: 20px;
+        font-size: 22px;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+    <h1>🍻 Licznik alkoholu</h1>
+
+    <div class="drink">
+        <div class="label">🍹 Drink (200 ml)</div>
+        <div class="controls">
+            <button onclick="change('drink', -1)">−</button>
+            <div class="count" id="drink-count">0</div>
+            <button onclick="change('drink', 1)">+</button>
+        </div>
+    </div>
+
+    <div class="drink">
+        <div class="label">🥃 Shot (40 ml)</div>
+        <div class="controls">
+            <button onclick="change('shot', -1)">−</button>
+            <div class="count" id="shot-count">0</div>
+            <button onclick="change('shot', 1)">+</button>
+        </div>
+    </div>
+
+    <div class="drink">
+        <div class="label">🍷 Wino (100 ml)</div>
+        <div class="controls">
+            <button onclick="change('wine', -1)">−</button>
+            <div class="count" id="wine-count">0</div>
+            <button onclick="change('wine', 1)">+</button>
+        </div>
+    </div>
+
+    <div class="drink">
+        <div class="label">🥂 Szampan (100 ml)</div>
+        <div class="controls">
+            <button onclick="change('champagne', -1)">−</button>
+            <div class="count" id="champagne-count">0</div>
+            <button onclick="change('champagne', 1)">+</button>
+        </div>
+    </div>
+
+    <div class="total">
+        Łącznie: <span id="total">0</span> ml
+    </div>
+</div>
+
+<script>
+const drinks = {
+    drink: 200,
+    shot: 40,
+    wine: 100,
+    champagne: 100
+};
+
+let counts = JSON.parse(localStorage.getItem("counts")) || {
+    drink: 0,
+    shot: 0,
+    wine: 0,
+    champagne: 0
+};
+
+function change(type, value) {
+    counts[type] += value;
+    if (counts[type] < 0) counts[type] = 0;
+    update();
+}
+
+function update() {
+    document.getElementById("drink-count").innerText = counts.drink;
+    document.getElementById("shot-count").innerText = counts.shot;
+    document.getElementById("wine-count").innerText = counts.wine;
+    document.getElementById("champagne-count").innerText = counts.champagne;
+
+    const total =
+        counts.drink * drinks.drink +
+        counts.shot * drinks.shot +
+        counts.wine * drinks.wine +
+        counts.champagne * drinks.champagne;
+
+    document.getElementById("total").innerText = total;
+
+    localStorage.setItem("counts", JSON.stringify(counts));
+}
+
+update();
+</script>
+
+</body>
+</html>
